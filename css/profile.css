@@ -1,0 +1,182 @@
+/* ── ENI Bexder — Profile Modal ───────────────────────────────────────── */
+
+#profile-modal {
+  width: min(520px, 92vw);
+}
+
+#profile-content {
+  display: flex;
+  gap: 22px;
+  padding: 18px;
+  align-items: flex-start;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── Avatar section ──────────────────────────────────────────────── */
+
+#profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/*
+ * Avatar containers: default icon is an <img class="avatar-icon-img"> child
+ * centered with transform. When a custom photo is active, the photo img
+ * (absolute, inset 0) sits on top and covers the icon.
+ */
+
+#profile-avatar-large {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 24px var(--accent-glow);
+  position: relative;
+  flex-shrink: 0;
+  background: #7c5cfc; /* overridden by JS per user color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#profile-avatar-mini {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  background: #7c5cfc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Default icon — centered via transform regardless of flex */
+.avatar-icon-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58%;
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Custom photo — absolute, covers the icon when shown */
+#profile-large-img,
+#profile-avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+  z-index: 2;
+}
+
+/* ── Color picker row ────────────────────────────────────────────── */
+
+.avatar-color-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.avatar-color-row label {
+  font-size: 10px !important;
+  font-weight: 700;
+  color: var(--text3) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0 !important;
+}
+
+.avatar-color-row input[type="color"] {
+  width: 40px;
+  height: 26px;
+  padding: 2px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: transparent;
+}
+
+/* ── Remove-avatar button ────────────────────────────────────────── */
+
+#profile-remove-avatar-btn {
+  font-size: 11px !important;
+  padding: 4px 10px !important;
+  opacity: 0.7;
+}
+
+#profile-remove-avatar-btn:hover { opacity: 1; }
+
+/* ── Form fields ─────────────────────────────────────────────────── */
+
+#profile-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#profile-fields .field-group {
+  margin-bottom: 12px;
+}
+
+#profile-fields label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+#profile-birthday-input,
+#profile-username-input {
+  width: 100%;
+}
+
+/* Social links */
+.social-links-group { gap: 0; }
+
+.social-group-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.social-link-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.social-link-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.social-icon {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+
+.social-icon svg { width: 14px; height: 14px; }
+
+.social-yt { background: #ff0000; }
+.social-dc { background: #5865f2; }
+.social-tw { background: #9146ff; }
+.social-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }

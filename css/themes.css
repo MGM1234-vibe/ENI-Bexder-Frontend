@@ -1,0 +1,87 @@
+/* ── ENI Bexder — Theme Definitions ───────────────────────────────────── */
+
+/* ── Light Theme ────────────────────────────────────────────────────── */
+
+body.theme-light {
+  --bg:           #f3f3fc;
+  --bg2:          #e8e8f5;
+  --bg3:          #dcdcf0;
+  --glass:        rgba(0,0,0,0.04);
+  --glass-hover:  rgba(0,0,0,0.07);
+  --glass-strong: rgba(0,0,0,0.10);
+  --border:       rgba(0,0,0,0.09);
+  --border2:      rgba(0,0,0,0.15);
+  --accent:       #5c3ef8;
+  --accent2:      #4a2fda;
+  --accent-glow:  rgba(92,62,248,0.22);
+  --text:         #14142a;
+  --text2:        #3c3c68;
+  --text3:        #7a7a9e;
+  --danger:       #cc3333;
+  --success:      #1f9e62;
+}
+
+body.theme-light #bg-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(240,240,248,0.7) 0%,
+    rgba(240,240,248,0.5) 50%,
+    rgba(240,240,248,0.9) 100%
+  );
+}
+
+body.theme-light #bg-image {
+  filter: blur(40px) brightness(0.85) saturate(0.8);
+}
+
+body.theme-light #top-bar {
+  background: rgba(240,240,248,0.75);
+}
+
+body.theme-light #bottom-bar {
+  background: rgba(240,240,248,0.8);
+}
+
+body.theme-light #game-info-panel {
+  background: rgba(240,240,248,0.65);
+}
+
+body.theme-light .game-tile .tile-placeholder {
+  background: var(--bg2);
+}
+
+/* ── Dark Theme (default) ───────────────────────────────────────────── */
+
+body.theme-dark {
+  /* uses :root defaults */
+}
+
+/* ── Custom Theme ───────────────────────────────────────────────────── */
+
+body.theme-custom {
+  --bg:    var(--custom-bg, #0a0a0f);
+  --text:  var(--custom-text, #f0f0f8);
+  --accent: var(--custom-accent, #7c5cfc);
+  --accent2: var(--custom-accent, #5e3de8);
+  --accent-glow: rgba(124,92,252,0.35);
+  --bg2:   color-mix(in srgb, var(--custom-bg, #0a0a0f) 80%, white 20%);
+  --bg3:   color-mix(in srgb, var(--custom-bg, #0a0a0f) 60%, white 40%);
+  --glass: rgba(255,255,255,0.05);
+  --glass-hover: rgba(255,255,255,0.09);
+  --glass-strong: rgba(255,255,255,0.12);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text2: color-mix(in srgb, var(--custom-text, #f0f0f8) 70%, transparent 30%);
+  --text3: color-mix(in srgb, var(--custom-text, #f0f0f8) 45%, transparent 55%);
+}
+
+/* ── Accent color accent effects propagated ─────────────────────────── */
+
+body .btn-primary { background: var(--accent); }
+body .btn-primary:hover { background: var(--accent2); }
+body .category-tab.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+body .carousel-arrow:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+body .home-btn:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+body input:focus, body textarea:focus, body select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+body .game-tile.active { border-color: var(--accent); box-shadow: 0 0 40px var(--accent-glow), 0 8px 32px rgba(0,0,0,0.5); }
+body .toggle-switch input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }

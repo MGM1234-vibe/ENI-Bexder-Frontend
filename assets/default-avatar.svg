@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#2d1f6e"/>
+      <stop offset="100%" stop-color="#0d0d1a"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7c5cfc" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7c5cfc" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="circle">
+      <circle cx="48" cy="48" r="48"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="48" cy="48" r="48" fill="url(#bg)"/>
+
+  <!-- Glow -->
+  <circle cx="48" cy="48" r="48" fill="url(#glow)"/>
+
+  <!-- Body / shirt -->
+  <ellipse cx="48" cy="94" rx="30" ry="20" fill="#7c5cfc" opacity="0.9" clip-path="url(#circle)"/>
+  <ellipse cx="48" cy="86" rx="22" ry="14" fill="#6040e0" opacity="0.95" clip-path="url(#circle)"/>
+
+  <!-- Neck -->
+  <rect x="42" y="59" width="12" height="12" rx="4" fill="#c8a882" clip-path="url(#circle)"/>
+
+  <!-- Head -->
+  <ellipse cx="48" cy="44" rx="18" ry="20" fill="#d4aa80"/>
+
+  <!-- Hair -->
+  <ellipse cx="48" cy="28" rx="18" ry="10" fill="#2a1a0a"/>
+  <ellipse cx="30" cy="36" rx="5" ry="8" fill="#2a1a0a"/>
+  <ellipse cx="66" cy="36" rx="5" ry="8" fill="#2a1a0a"/>
+
+  <!-- Eyes -->
+  <ellipse cx="41" cy="43" rx="3.5" ry="4" fill="#1a1a2e"/>
+  <ellipse cx="55" cy="43" rx="3.5" ry="4" fill="#1a1a2e"/>
+  <circle cx="42.5" cy="42" r="1.2" fill="white" opacity="0.6"/>
+  <circle cx="56.5" cy="42" r="1.2" fill="white" opacity="0.6"/>
+
+  <!-- Eyebrows -->
+  <path d="M37.5 37.5 Q41 35.5 44.5 37.5" stroke="#2a1a0a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M51.5 37.5 Q55 35.5 58.5 37.5" stroke="#2a1a0a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M48 47 Q45.5 51 47 53 Q48 54 49 53 Q50.5 51 48 47" fill="#c09070" opacity="0.6"/>
+
+  <!-- Smile -->
+  <path d="M42 57 Q48 61.5 54 57" stroke="#a07050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Controller icon badge (bottom right) -->
+  <circle cx="72" cy="72" r="14" fill="#0d0d1a" opacity="0.85"/>
+  <circle cx="72" cy="72" r="13" fill="none" stroke="#7c5cfc" stroke-width="1.5"/>
+  <!-- Gamepad shape -->
+  <rect x="64" y="68" width="16" height="10" rx="4" fill="#7c5cfc" opacity="0.9"/>
+  <rect x="61" y="70" width="5" height="5" rx="2.5" fill="#7c5cfc" opacity="0.9"/>
+  <rect x="82" y="70" width="5" height="5" rx="2.5" fill="#7c5cfc" opacity="0.9"/>
+  <!-- D-pad on left side -->
+  <rect x="63" y="71.5" width="5" height="2" rx="1" fill="white" opacity="0.9"/>
+  <rect x="64.5" y="70" width="2" height="5" rx="1" fill="white" opacity="0.9"/>
+  <!-- Buttons on right side -->
+  <circle cx="84" cy="71" r="1" fill="white" opacity="0.9"/>
+  <circle cx="86" cy="73" r="1" fill="white" opacity="0.9"/>
+</svg>
