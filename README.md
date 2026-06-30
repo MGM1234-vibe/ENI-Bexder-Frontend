@@ -1,6 +1,8 @@
+KEEP IN MIND THIS IS BUILDT WITH AI
+
 # ENI Bexder
 
-A console-style desktop emulator frontend for Windows, inspired by the Nintendo Wii Menu, Xbox 360 Dashboard, and Playnite Fullscreen. Built with Electron — drop in your ROMs, emulators, and music, then play everything from one slick launcher.
+A console-style desktop emulator frontend for Windows, inspired by the Nintendo WiiU Menu, Xbox 360 Dashboard, and Playnite Fullscreen. Built with Electron — drop in your ROMs, emulators, and music, then play everything from one slick launcher.
 
 ---
 
