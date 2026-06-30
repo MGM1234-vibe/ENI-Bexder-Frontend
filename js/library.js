@@ -29,6 +29,38 @@ const Library = (() => {
     '.rvz','.wbfs','.nsp','.xci','.gb','.gbc','.gba','.nds','.3ds','.cia',
     '.md','.gen','.gdi','.chd','.rom','.zip','.7z'];
 
+  const SCREENSHOT_PATTERNS = [/^screenshot\b/i, /^ss\d*\b/i, /^screenshot_/i, /_screenshot_/i, /\bscreen_/i];
+
+  function _isScreenshot(filename) {
+    const base = filename.replace(/\.[^.]+$/, '');
+    return SCREENSHOT_PATTERNS.some(re => re.test(base));
+  }
+
+  const UPDATE_DLC_EXTENSIONS = ['.nsp','.nsz','.ncz','.nsu','.xci','.pkg','.wud','.wux',
+    '.wad','.iso','.cia','.dlc','.add','.addon','.xex','.pak','.prx','.rap','.psvimg'];
+
+  function _isUpdateDlc(filename) {
+    const lower = filename.toLowerCase();
+    return UPDATE_DLC_EXTENSIONS.some(ext => lower.endsWith(ext));
+  }
+
+  function _classifyFile(filename) {
+    const lower = filename.toLowerCase();
+    if (_isScreenshot(filename)) return 'ignore';
+    const nameOnly = lower.replace(/\.[^.]+$/, '');
+    const isUpdate = /\b(update|upd|ver(\d+)?|patch)\b/.test(nameOnly) ||
+                     lower.includes('[u]') || lower.includes('_u_');
+    const isDlc = /\b(dlc|addon|add-on|expansion|extra|episode)\b/.test(nameOnly) ||
+                  lower.includes('_dlc_');
+    if (!isUpdate && !isDlc) return 'main';
+    if (isUpdate) return 'update';
+    return 'dlc';
+  }
+
+  function _collectFilesInDir(dirFullPath) {
+    return [];
+  }
+
   let _games = [];
   let _playData = {};
   let _collections = [];
@@ -42,18 +74,93 @@ const Library = (() => {
     if (!dirResult.ok) return;
 
     const found = [];
+    const updateDlcBuffer = [];
+
     for (const consoleDir of dirResult.files) {
       if (!consoleDir.isDirectory) continue;
       const key = consoleDir.name.toLowerCase();
       const consoleInfo = CONSOLE_MAP[key] || { name: consoleDir.name, category: 'arcade' };
       const romsResult = await window.api.fs.readDir(consoleDir.fullPath);
       if (!romsResult.ok) continue;
-      for (const rom of romsResult.files) {
-        if (rom.isDirectory) continue;
+
+      const gameFolders = [];
+      const flatFiles = [];
+      const allEntries = romsResult.files;
+
+      for (const entry of allEntries) {
+        if (entry.isDirectory) {
+          gameFolders.push(entry);
+        } else if (!entry.isDirectory) {
+          flatFiles.push(entry);
+        }
+      }
+
+      for (const folder of gameFolders) {
+        const folderResult = await window.api.fs.readDir(folder.fullPath);
+        if (!folderResult.ok) continue;
+        let mainRom = null;
+        const folderUpdates = [];
+        const folderDlcs = [];
+        for (const fentry of folderResult.files) {
+          if (fentry.isDirectory) continue;
+          if (_isScreenshot(fentry.name)) continue;
+          const ext = fentry.name.slice(fentry.name.lastIndexOf('.')).toLowerCase();
+          const classification = _classifyFile(fentry.name);
+          if (classification === 'main' && !mainRom) {
+            if (ROM_EXTENSIONS.includes(ext)) mainRom = fentry;
+          } else if (classification === 'update') {
+            folderUpdates.push(fentry);
+          } else if (classification === 'dlc') {
+            folderDlcs.push(fentry);
+          } else if (!mainRom && ROM_EXTENSIONS.includes(ext)) {
+            mainRom = fentry;
+          }
+        }
+        const gameId = `${key}::${folder.name}`;
+        if (mainRom) {
+          const title = folder.name.replace(/[_()[\]]/g, ' ').trim();
+          const updatePath = folderUpdates.length > 0 ? folderUpdates[0].fullPath : '';
+          const dlcPaths = folderDlcs.map(f => f.fullPath);
+          found.push({
+            id: gameId, title, console: key,
+            consoleName: consoleInfo.name,
+            category: consoleInfo.category,
+            path: mainRom.fullPath,
+            coverPath: '',
+            description: '',
+            isFolder: true,
+            updatePath,
+            dlcPaths,
+            folderPath: folder.fullPath,
+          });
+        }
+        for (const fentry of flatFiles) {
+          if (fentry.isDirectory) continue;
+          if (_isScreenshot(fentry.name)) continue;
+          const classification = _classifyFile(fentry.name);
+          if (classification === 'main') continue;
+          if (!fentry.name.toLowerCase().includes(folder.name.toLowerCase().split(/[\s\-_]+/)[0].toLowerCase())) continue;
+          if (classification === 'update') {
+            if (!updateDlcBuffer.find(u => u.gameId === gameId && u.type === 'update')) {
+              updateDlcBuffer.push({ gameId, type: 'update', path: fentry.fullPath });
+            }
+          } else if (classification === 'dlc') {
+            if (!updateDlcBuffer.find(u => u.gameId === gameId && u.path === fentry.fullPath)) {
+              updateDlcBuffer.push({ gameId, type: 'dlc', path: fentry.fullPath });
+            }
+          }
+        }
+      }
+
+      for (const rom of flatFiles) {
+        if (_isScreenshot(rom.name)) continue;
         const ext = rom.name.slice(rom.name.lastIndexOf('.')).toLowerCase();
         if (!ROM_EXTENSIONS.includes(ext)) continue;
         const title = rom.name.replace(/\.[^.]+$/, '').replace(/[_()[\]]/g, ' ').trim();
         const id = `${key}::${rom.name}`;
+        const matchedFolder = gameFolders.find(gf =>
+          rom.name.toLowerCase().includes(gf.name.toLowerCase().split(/[\s\-_]+/)[0].toLowerCase())
+        );
         found.push({
           id, title, console: key,
           consoleName: consoleInfo.name,
@@ -61,10 +168,26 @@ const Library = (() => {
           path: rom.fullPath,
           coverPath: '',
           description: '',
+          isFolder: false,
+          updatePath: '',
+          dlcPaths: [],
+          folderPath: matchedFolder ? matchedFolder.fullPath : '',
         });
       }
     }
+
     _games = found;
+    for (const item of updateDlcBuffer) {
+      const game = _games.find(g => g.id === item.gameId);
+      if (!game) continue;
+      if (item.type === 'update' && !game.updatePath) {
+        game.updatePath = item.path;
+      } else if (item.type === 'dlc') {
+        if (!game.dlcPaths.includes(item.path)) {
+          game.dlcPaths.push(item.path);
+        }
+      }
+    }
     await _loadCoverPaths();
   }
 
@@ -75,7 +198,7 @@ const Library = (() => {
     const coverMap = {};
     for (const f of result.files) {
       const base = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
-      coverMap[base] = f.fullPath;
+      coverMap[base] = f.fullPath.replace(/\\/g, '/');
     }
     for (const game of _games) {
       const key = game.title.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -100,7 +223,9 @@ const Library = (() => {
       if (m.genres)      game.genres      = m.genres;
       if (m.developer)   game.developer   = m.developer;
       if (m.releaseYear) game.releaseYear  = m.releaseYear;
-      if (m.coverPath)   game.coverPath   = m.coverPath;
+      if (m.coverPath)   game.coverPath   = m.coverPath.replace(/\\/g, '/');
+      if (m.updatePath)   game.updatePath   = m.updatePath.replace(/\\/g, '/');
+      if (m.dlcPaths)     game.dlcPaths     = m.dlcPaths.map(p => p.replace(/\\/g, '/'));
     }
   }
 

@@ -25,12 +25,21 @@ const Themes = (() => {
 
     // Custom background image
     if (settings.bgImagePath) {
-      body.style.backgroundImage    = `url('file://${settings.bgImagePath.replace(/\\/g, '/')}')`;
-      body.style.backgroundSize     = 'cover';
-      body.style.backgroundPosition = 'center';
-      body.style.backgroundRepeat   = 'no-repeat';
+      const imgUrl = `url('file://${settings.bgImagePath.replace(/\\/g, '/')}')`;
+      const bgImageEl = document.getElementById('bg-image');
+      if (bgImageEl) {
+        bgImageEl.style.backgroundImage = imgUrl;
+        bgImageEl.style.backgroundSize = 'cover';
+        bgImageEl.style.backgroundPosition = 'center';
+        bgImageEl.style.backgroundRepeat = 'no-repeat';
+        bgImageEl.style.filter = 'none';
+      }
     } else {
-      body.style.backgroundImage = '';
+      const bgImageEl = document.getElementById('bg-image');
+      if (bgImageEl) {
+        bgImageEl.style.backgroundImage = '';
+        bgImageEl.style.filter = '';
+      }
     }
 
     // Background video

@@ -214,6 +214,39 @@ ipcMain.handle('emulator-launch', async (_, emulatorPath, romPath, args) => {
   }
 });
 
+// ── Net (proxy fetch through main to avoid renderer CORS/CSP limits) ─────────
+
+ipcMain.handle('net-fetch-binary', async (_, url) => {
+  // Follow up to 5 redirects to handle GitHub's CDN redirect chains
+  return _fetchWithRedirects(url, 0);
+});
+
+function _fetchWithRedirects(url, depth) {
+  return new Promise((resolve) => {
+    if (depth > 5) return resolve({ ok: false, error: 'Too many redirects' });
+    const mod = url.startsWith('https') ? require('https') : require('http');
+    mod.get(url, { headers: { 'User-Agent': 'ENIBexder/1.0' } }, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 303 || res.statusCode === 307 || res.statusCode === 308) {
+        const location = res.headers.location;
+        if (!location) return resolve({ ok: false, error: 'Redirect with no location' });
+        // Resolve relative redirects
+        const resolved = location.startsWith('http') ? location : new URL(location, url).toString();
+        // Consume response body to free memory
+        res.resume();
+        return resolve(_fetchWithRedirects(resolved, depth + 1));
+      }
+      if (res.statusCode !== 200) {
+        res.resume();
+        return resolve({ ok: false, status: res.statusCode });
+      }
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
+      res.on('end', () => resolve({ ok: true, base64: Buffer.concat(chunks).toString('base64') }));
+      res.on('error', e => resolve({ ok: false, error: e.message }));
+    }).on('error', e => resolve({ ok: false, error: e.message }));
+  });
+}
+
 // ── Shell ────────────────────────────────────────────────────────────────────
 
 ipcMain.handle('shell-open-path', async (_, p) => shell.openPath(p));

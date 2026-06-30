@@ -194,15 +194,12 @@ const Sfx = (() => {
   function play(name) {
     if (!_enabled) return;
     try {
-      // Custom file takes priority
+      // Only play custom files — no built-in synthesizer fallback
       if (_custom[name]) {
         const audio   = _custom[name].cloneNode();
         audio.volume  = _volume;
         audio.play().catch(() => {});
-        return;
       }
-      // Fall back to synthesizer
-      if (_synth[name]) _synth[name]();
     } catch { /* AudioContext blocked before first gesture — silently skip */ }
   }
 

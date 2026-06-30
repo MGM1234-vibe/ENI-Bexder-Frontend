@@ -1,60 +1,80 @@
 /* ── ENI Bexder — Profile Modal ───────────────────────────────────────── */
 
 #profile-modal {
-  width: min(520px, 92vw);
+  width: min(620px, 94vw);
+  max-height: 88vh;
 }
 
 #profile-content {
   display: flex;
-  gap: 22px;
-  padding: 18px;
-  align-items: flex-start;
+  flex-direction: row;
   flex: 1;
-  overflow-y: auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-/* ── Avatar section ──────────────────────────────────────────────── */
+/* ── Left column — avatar ─────────────────────────────────────────── */
 
 #profile-avatar-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
+  padding: 28px 20px 24px;
+  border-right: 1px solid var(--border);
   flex-shrink: 0;
+  width: 180px;
+  background: rgba(124,92,252,0.04);
 }
 
-/*
- * Avatar containers: default icon is an <img class="avatar-icon-img"> child
- * centered with transform. When a custom photo is active, the photo img
- * (absolute, inset 0) sits on top and covers the icon.
- */
-
 #profile-avatar-large {
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid var(--accent);
-  box-shadow: 0 0 24px var(--accent-glow);
+  box-shadow: 0 0 0 5px rgba(124,92,252,0.15),
+              0 0 24px var(--accent-glow),
+              0 6px 20px rgba(0,0,0,0.5);
   position: relative;
   flex-shrink: 0;
-  background: #7c5cfc; /* overridden by JS per user color */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#profile-avatar-mini {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  position: relative;
   background: #7c5cfc;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+#profile-avatar-large:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 0 7px rgba(124,92,252,0.2),
+              0 0 36px var(--accent-glow),
+              0 10px 28px rgba(0,0,0,0.55);
+}
+
+#profile-avatar-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+  border: 2px solid var(--avatar-border);
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  position: relative;
+  overflow: visible;
+}
+
+#profile-btn:hover #profile-avatar-mini {
+  border-color: var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
 }
 
 /* Default icon — centered via transform regardless of flex */
@@ -63,10 +83,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 58%;
+  width: 55%;
   height: auto;
   pointer-events: none;
   z-index: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
 }
 
 /* Custom photo — absolute, covers the icon when shown */
@@ -81,18 +102,27 @@
   z-index: 2;
 }
 
+/* Avatar action buttons row */
+.avatar-actions-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
 /* ── Color picker row ────────────────────────────────────────────── */
 
 .avatar-color-row {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   margin-top: 2px;
 }
 
 .avatar-color-row label {
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 700;
   color: var(--text3) !important;
   text-transform: uppercase;
@@ -101,8 +131,8 @@
 }
 
 .avatar-color-row input[type="color"] {
-  width: 40px;
-  height: 26px;
+  width: 36px;
+  height: 24px;
   padding: 2px;
   border-radius: var(--radius-xs);
   cursor: pointer;
@@ -116,20 +146,29 @@
   font-size: 11px !important;
   padding: 4px 10px !important;
   opacity: 0.7;
+  width: 100%;
+}
+
+#profile-avatar-btn {
+  width: 100%;
 }
 
 #profile-remove-avatar-btn:hover { opacity: 1; }
 
-/* ── Form fields ─────────────────────────────────────────────────── */
+/* ── Right column — form fields ──────────────────────────────────── */
 
 #profile-fields {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 20px 24px 12px;
+  gap: 0;
+  overflow-y: auto;
+  min-width: 0;
 }
 
 #profile-fields .field-group {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 #profile-fields label {

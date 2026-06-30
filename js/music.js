@@ -9,6 +9,9 @@ const Music = (() => {
   let _repeat = false;
   let _playing = false;
   let _onChangeCallback = null;
+  let _fadeDuration = 300;
+  let _trackDuration = 0;
+  let _trackTimer = null;
 
   function _createAudio() {
     if (_audio) {
@@ -24,6 +27,22 @@ const Music = (() => {
     _audio.addEventListener('play',  () => { _playing = true;  _notify(); });
     _audio.addEventListener('pause', () => { _playing = false; _notify(); });
     _audio.addEventListener('error', () => { next(); });
+    _audio.addEventListener('loadedmetadata', () => {
+      _applyTrackTimer();
+    });
+  }
+
+  function _applyTrackTimer() {
+    if (_trackTimer) { clearTimeout(_trackTimer); _trackTimer = null; }
+    if (!_trackDuration || !_audio || !_audio.duration || _audio.duration === Infinity) return;
+    const remaining = (_trackDuration * 60) - _audio.currentTime;
+    if (remaining > 0) {
+      _trackTimer = setTimeout(() => {
+        _trackTimer = null;
+        if (_audio) { _audio.pause(); }
+        next();
+      }, remaining * 1000);
+    }
   }
 
   async function scan(musicDir) {
@@ -104,12 +123,12 @@ const Music = (() => {
 
   function duck() {
     _isDucked = true;
-    _fadeTo(_volume * 0.25, 300);
+    _fadeTo(_volume * 0.25, _fadeDuration);
   }
 
   function unduck() {
     _isDucked = false;
-    _fadeTo(_volume, 300);
+    _fadeTo(_volume, _fadeDuration);
   }
 
   function pauseForGame() {
@@ -132,6 +151,13 @@ const Music = (() => {
   }
 
   function setRepeat(val) { _repeat = val; }
+
+  function setTrackDuration(minutes) {
+    _trackDuration = Math.max(0, minutes);
+    _applyTrackTimer();
+  }
+
+  function getTrackDuration() { return _trackDuration; }
 
   function getProgress() {
     if (!_audio || !_audio.duration) return 0;
@@ -165,13 +191,21 @@ const Music = (() => {
     }
   }
 
+  function setFadeDuration(ms) {
+    _fadeDuration = Math.max(50, Math.min(2000, ms));
+  }
+
+  function getFadeDuration() { return _fadeDuration; }
+
   return {
     scan, play, toggle, next, prev,
-    setVolume, setShuffle, setRepeat,
+    setVolume, setShuffle, setRepeat, setFadeDuration, setTrackDuration,
     getProgress, getDuration, getCurrentTime,
     getCurrent, isPlaying, getTracks,
     getShuffle, getRepeat, getIndex, getVolumeRaw,
+    getFadeDuration, getTrackDuration,
     onChange, startIfNotPlaying,
     duck, unduck, pauseForGame, resumeAfterGame,
+    _applyTrackTimer,
   };
 })();

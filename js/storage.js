@@ -39,6 +39,7 @@ const Storage = (() => {
       customAccent: '#7c5cfc',
       customText: '#ffffff',
       timeMode: 'system',
+      timeFormat: '24',
       customHour: 12,
       customMinute: 0,
       customTimezone: 'UTC',
@@ -61,6 +62,8 @@ const Storage = (() => {
       controllerProfile: 'default',
       sfxEnabled: true,
       sfxVolume: 60,
+      customKeyMap: {},
+      customBtnMap: {},
     });
   }
 
@@ -120,6 +123,17 @@ const Storage = (() => {
     return writeJSON(appdataPath('cache', 'gamemeta.json'), data);
   }
 
+  async function loadTileLayout() {
+    return readJSON(appdataPath('cache', 'tilelayout.json'), {
+      tileSizes: {},
+      customTiles: [],
+    });
+  }
+
+  async function saveTileLayout(data) {
+    return writeJSON(appdataPath('cache', 'tilelayout.json'), data);
+  }
+
   return {
     init,
     appdataPath,
@@ -138,5 +152,7 @@ const Storage = (() => {
     savePlayData,
     loadGameMeta,
     saveGameMeta,
+    loadTileLayout,
+    saveTileLayout,
   };
 })();

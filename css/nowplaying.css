@@ -172,6 +172,60 @@
   background: rgba(124, 92, 252, 0.28);
 }
 
+.np-timer-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+#np-timer-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 0;
+  width: 100%;
+}
+
+#np-timer-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border2);
+  outline: none;
+  cursor: pointer;
+}
+
+#np-timer-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+#np-timer-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+.np-timer-value {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text2);
+  min-width: 28px;
+  text-align: right;
+}
+
 .np-vol-btn svg { width: 12px; height: 12px; }
 
 /* ── Volume panel ────────────────────────────────────────────────────── */
@@ -216,19 +270,68 @@
   background: var(--border2);
   outline: none;
   cursor: pointer;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+  margin: 6px 0;
+  touch-action: none;
+  user-select: none;
 }
+
 #np-vol-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
-  box-shadow: 0 0 6px var(--accent-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+  margin-top: -5px;
 }
+
+#np-vol-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px var(--accent-glow);
+  pointer-events: auto;
+}
+
 #np-vol-slider::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: 2px;
+  pointer-events: none;
+  background: var(--border2);
+}
+
+#np-vol-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px var(--accent-glow);
+  pointer-events: auto;
+}
+
+#np-vol-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border2);
+  pointer-events: none;
+}
+
+#np-vol-slider::-moz-range-progress {
+  background: var(--accent);
+  border-radius: 2px;
+  height: 4px;
 }
 
 #np-vol-label {

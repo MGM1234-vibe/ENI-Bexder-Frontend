@@ -45,6 +45,11 @@ contextBridge.exposeInMainWorld('api', {
     onExited: (cb) => ipcRenderer.on('emulator-exited', cb),
   },
 
+  // Net (proxied through main process — no CORS limits)
+  net: {
+    fetchBinary: (url) => ipcRenderer.invoke('net-fetch-binary', url),
+  },
+
   // Shell
   shell: {
     openPath: (p) => ipcRenderer.invoke('shell-open-path', p),

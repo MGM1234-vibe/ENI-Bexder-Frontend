@@ -3,22 +3,22 @@
 /* ── Light Theme ────────────────────────────────────────────────────── */
 
 body.theme-light {
-  --bg:           #f3f3fc;
-  --bg2:          #e8e8f5;
-  --bg3:          #dcdcf0;
-  --glass:        rgba(0,0,0,0.04);
-  --glass-hover:  rgba(0,0,0,0.07);
-  --glass-strong: rgba(0,0,0,0.10);
-  --border:       rgba(0,0,0,0.09);
-  --border2:      rgba(0,0,0,0.15);
-  --accent:       #5c3ef8;
-  --accent2:      #4a2fda;
-  --accent-glow:  rgba(92,62,248,0.22);
-  --text:         #14142a;
-  --text2:        #3c3c68;
+  --bg:           #f5f5ff;
+  --bg2:          #eaeaf8;
+  --bg3:          #ddddf5;
+  --glass:        rgba(0,0,0,0.05);
+  --glass-hover:  rgba(0,0,0,0.10);
+  --glass-strong: rgba(0,0,0,0.16);
+  --border:       rgba(0,0,0,0.10);
+  --border2:      rgba(0,0,0,0.20);
+  --accent:       #5b3ef8;
+  --accent2:      #4428d0;
+  --accent-glow:  rgba(91,62,248,0.30);
+  --text:         #12122a;
+  --text2:        #3a3a68;
   --text3:        #7a7a9e;
-  --danger:       #cc3333;
-  --success:      #1f9e62;
+  --danger:       #e04040;
+  --success:      #20b870;
 }
 
 body.theme-light #bg-overlay {
@@ -31,7 +31,13 @@ body.theme-light #bg-overlay {
 }
 
 body.theme-light #bg-image {
-  filter: blur(40px) brightness(0.85) saturate(0.8);
+  background-color: #f0f0f8;
+  background-size: cover;
+  background-position: center;
+}
+
+body.theme-light #bg-overlay {
+  background: rgba(240,240,248,0.50);
 }
 
 body.theme-light #top-bar {
@@ -53,7 +59,33 @@ body.theme-light .game-tile .tile-placeholder {
 /* ── Dark Theme (default) ───────────────────────────────────────────── */
 
 body.theme-dark {
-  /* uses :root defaults */
+  --bg:           #0c0c1a;
+  --bg2:          #16162e;
+  --bg3:          #22224a;
+  --glass:        rgba(255,255,255,0.07);
+  --glass-hover:  rgba(255,255,255,0.14);
+  --glass-strong: rgba(255,255,255,0.20);
+  --border:       rgba(255,255,255,0.12);
+  --border2:      rgba(255,255,255,0.22);
+  --accent:       #8b6fff;
+  --accent2:      #6b48e0;
+  --accent-glow:  rgba(139,111,255,0.50);
+  --text:         #f8f8ff;
+  --text2:        #c0c0e0;
+  --text3:        #7878a0;
+  --danger:       #f05050;
+  --success:      #40d890;
+  --avatar-border: rgba(255,255,255,0.55);
+}
+
+body.theme-dark #bg-image {
+  background-color: #0c0c1a;
+  background-size: cover;
+  background-position: center;
+}
+
+body.theme-dark #bg-overlay {
+  background: rgba(12,12,26,0.55);
 }
 
 /* ── Custom Theme ───────────────────────────────────────────────────── */
@@ -62,8 +94,8 @@ body.theme-custom {
   --bg:    var(--custom-bg, #0a0a0f);
   --text:  var(--custom-text, #f0f0f8);
   --accent: var(--custom-accent, #7c5cfc);
-  --accent2: var(--custom-accent, #5e3de8);
-  --accent-glow: rgba(124,92,252,0.35);
+  --accent2: color-mix(in srgb, var(--custom-accent, #7c5cfc) 70%, black 30%);
+  --accent-glow: color-mix(in srgb, var(--custom-accent, #7c5cfc) 30%, transparent);
   --bg2:   color-mix(in srgb, var(--custom-bg, #0a0a0f) 80%, white 20%);
   --bg3:   color-mix(in srgb, var(--custom-bg, #0a0a0f) 60%, white 40%);
   --glass: rgba(255,255,255,0.05);

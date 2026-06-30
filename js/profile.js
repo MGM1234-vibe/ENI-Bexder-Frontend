@@ -58,7 +58,7 @@ const Profile = (() => {
     // Paint background (icon + color) on both containers
     _applyAvatarColor(color);
 
-    // Username chip
+    // Username chip (top bar)
     const usernameMini = document.getElementById('profile-username-mini');
     if (usernameMini) usernameMini.textContent = _data.username || 'Player';
 

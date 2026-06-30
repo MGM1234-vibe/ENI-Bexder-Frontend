@@ -79,27 +79,30 @@ const App = (() => {
     if (!timeEl) return;
 
     const s = _settings;
-    let d;
+    let d = new Date();
 
     if (s.timeMode === 'custom') {
-      d = new Date();
-      const base = new Date();
-      base.setHours(s.customHour || 0);
-      base.setMinutes(s.customMinute || 0);
-      const diffFromBase = d - new Date(d.getFullYear(), d.getMonth(), d.getDate(),
-        s.customHour || 0, s.customMinute || 0, 0);
-      d = new Date(base.getTime() + diffFromBase);
-    } else {
-      d = new Date();
+      const targetMin = (s.customHour || 0) * 60 + (s.customMinute || 0);
+      const nowMin = d.getHours() * 60 + d.getMinutes();
+      const offset = targetMin - nowMin;
+      d = new Date(d.getTime() + offset * 60000);
     }
 
-    let h = d.getHours();
+    const h = d.getHours();
     const m = String(d.getMinutes()).padStart(2, '0');
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12 || 12;
+    const fmt = _settings.timeFormat || '24';
 
-    timeEl.textContent = `${h}:${m}`;
-    if (ampmEl) ampmEl.textContent = ampm;
+    document.body.classList.toggle('time-format-24', fmt === '24');
+
+    if (fmt === '12') {
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      timeEl.textContent = `${String(h12).padStart(2, '0')}:${m}`;
+      if (ampmEl) ampmEl.textContent = ampm;
+    } else {
+      timeEl.textContent = `${String(h).padStart(2, '0')}:${m}`;
+      if (ampmEl) ampmEl.textContent = '';
+    }
   }
 
   // ── Window state ──────────────────────────────────────────────────────
@@ -150,6 +153,20 @@ const App = (() => {
     Pages.renderCollectionTabs();
   }
 
+  async function reloadSettings(overrides) {
+    if (overrides) {
+      _settings = { ..._settings, ...overrides };
+    } else {
+      _settings = await Storage.loadSettings();
+    }
+    _updateClock();
+    Music.setVolume(_settings.volume ?? 75);
+    Sfx.setEnabled(_settings.sfxEnabled !== false);
+    Sfx.setVolume((_settings.sfxVolume ?? 60) / 100);
+    Controls.setDeadzone(_settings.controllerDeadzone ?? 15);
+    Controls.applyProfile(_settings.controllerProfile || 'default');
+  }
+
   // ── Boot ──────────────────────────────────────────────────────────────
 
   async function boot() {
@@ -193,6 +210,9 @@ const App = (() => {
     const gameMeta = await Storage.loadGameMeta();
     Library.loadGameMeta(gameMeta);
 
+    // 8c. Load tile layout (sizes + custom tiles) before rendering grid
+    await Pages.loadTileLayout();
+
     // 9. Init pages + render
     Pages.init();
     Pages.renderCollectionTabs();
@@ -201,7 +221,10 @@ const App = (() => {
     // 10. Init music
     await Music.scan(_appDir + '/music');
     NowPlaying.init();
-    Music.startIfNotPlaying();
+    if (Music.getTracks().length > 0) {
+      const randomIdx = Math.floor(Math.random() * Music.getTracks().length);
+      Music.play(randomIdx);
+    }
 
     // 11. Init settings UI
     await Settings.load(_appDir);
@@ -259,5 +282,5 @@ const App = (() => {
     });
   });
 
-  return { showToast, reloadLibrary, startAutoSave, getSettings: () => _settings, getAppDir: () => _appDir };
+  return { showToast, reloadLibrary, reloadSettings, startAutoSave, getSettings: () => _settings, getAppDir: () => _appDir };
 })();
