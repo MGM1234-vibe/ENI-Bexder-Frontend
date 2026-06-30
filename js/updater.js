@@ -1,7 +1,7 @@
 /* ── ENI Bexder — Update Checker ──────────────────────────────────────── */
 
 const Updater = (() => {
-  const CURRENT_VERSION = '1.0.0';
+  const CURRENT_VERSION = '1.1.0';
 
   async function check() {
     // Placeholder: in production, fetch from your update server
