@@ -168,8 +168,6 @@ assets/sounds/nav.mp3
 
 The app scans `assets/sounds/` on startup and loads any matching files automatically. If no file exists for a given action, the action plays silently.
 
-> If you add a new file while the app is already running, call `Sfx.reload()` from DevTools console to pick it up without restarting.
-
 ---
 
 ## Collections
